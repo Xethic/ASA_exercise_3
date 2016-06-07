@@ -209,7 +209,27 @@ def huffman(string):
 			bit = "0"+bit
 	print sfreq'''
 	
+
+def runlength(string):
 	
+	res = ""
+	curr = string[0]
+	i = 1
+	for k in range(1, len(string)):
+		if curr != string[k]:
+			if i == 1:
+				res += string[k-1]+" "
+			else:
+				res += str(i)+string[k-1]+" "
+			i = 1
+			curr = string[k]
+		else:			
+			i += 1
+			continue
+	res += str(i)+string[-1]
+	return res
+		
+		
 with open(str(sys.argv[1])) as f:
 	line = f.readline()
 	
@@ -236,7 +256,11 @@ with open(str(sys.argv[1])) as f:
 	print decode(bwt, LF)
 	#print decode(dec, bwt[1])
 	
+	hcode = huffman(bwt)
+	print hcode
+	
+	#print runlength(hcode)
 	
 	with open("encoding.txt",  "w") as out:
-		out.write(huffman(bwt))
+		out.write(runlength(hcode))
 
