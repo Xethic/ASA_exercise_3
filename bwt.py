@@ -194,7 +194,7 @@ def huffman(string):
 		
 		code += co[::-1]
 	
-	print code
+	return code
 	
 	''''code = []
 	bit = "1"
@@ -236,6 +236,7 @@ with open(str(sys.argv[1])) as f:
 	print decode(bwt, LF)
 	#print decode(dec, bwt[1])
 	
-
-	huffman("300012003")
+	
+	with open("encoding.txt",  "w") as out:
+		out.write(huffman(bwt))
 
