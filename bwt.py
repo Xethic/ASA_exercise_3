@@ -15,11 +15,11 @@ def encode(T):
 		
 		transform.append(s)
 		
-	print transform	
+	#print transform	
 	
 	sort = sorted(transform)
 	
-	print sort 
+	#print sort 
 	
 	bwtstring = ""
 	index = 0
@@ -143,7 +143,7 @@ def huffman(string):
 	#first and second in list, 0 left 1 right, new node with "first+second" as name, first+second freq as value
 	#tree contains node as key, tupel of freq, 0 or 1, parent as value
 	
-	print sfreq
+	#print sfreq
 	
 	tree = dict()
 	newnode = []
@@ -178,11 +178,11 @@ def huffman(string):
 		tree[l[0]] = (l[1], "0", njoin)
 		tree[r[0]] = (r[1], "1", njoin)
 		
-		print l
-		print r
+		#print l
+		#print r
 	
 	tree[njoin[0]] = (njoin[1])
-	print tree
+	#print tree
 	
 	code = ""	
 	for s in string:
@@ -218,9 +218,15 @@ def runlength(string):
 	for k in range(1, len(string)):
 		if curr != string[k]:
 			if i == 1:
-				res += string[k-1]+" "
+				if string[k-1] == "0":
+					res += "A"
+				else:
+					res += "B"
 			else:
-				res += str(i)+string[k-1]+" "
+				if string[k-1] == "0":
+					res += str(i)+"A"
+				else:
+					res += str(i)+"B"
 			i = 1
 			curr = string[k]
 		else:			
@@ -253,11 +259,11 @@ with open(str(sys.argv[1])) as f:
 	code = mtf(bwt)	
 	dec = imtf(code)	
 	
-	print decode(bwt, LF)
+	#print decode(bwt, LF)
 	#print decode(dec, bwt[1])
 	
 	hcode = huffman(bwt)
-	print hcode
+	#print hcode
 	
 	#print runlength(hcode)
 	
