@@ -1,5 +1,6 @@
 import sys
 
+
 def encode(T):
 	
 	s = ""
@@ -159,8 +160,8 @@ def huffman(string):
 	njoin = (l[0]+r[0], l[1]+r[1])		
 	newnode.append(njoin)
 	
-	tree[l[0]] = (l[1], "0", njoin)
-	tree[r[0]] = (r[1], "1", njoin)
+	tree[l[0]] = (l[1], "0", njoin[0])
+	tree[r[0]] = (r[1], "1", njoin[0])
 				
 	for i in range (2, len(sfreq)):
 
@@ -175,14 +176,14 @@ def huffman(string):
 		newnode = []
 		newnode.append(njoin)
 		
-		tree[l[0]] = (l[1], "0", njoin)
-		tree[r[0]] = (r[1], "1", njoin)
+		tree[l[0]] = (l[1], "0", njoin[0])
+		tree[r[0]] = (r[1], "1", njoin[0])
 		
 		#print l
 		#print r
 	
 	tree[njoin[0]] = (njoin[1])
-	#print tree
+	print tree
 	
 	code = ""	
 	for s in string:
@@ -190,11 +191,11 @@ def huffman(string):
 		co = ""
 		while(tree[s1] != 1.0):
 			co += tree[s1][1]
-			s1 = tree[s1][2][0]
+			s1 = tree[s1][2]
 		
 		code += co[::-1]
 	
-	return code
+	return (code, tree)
 	
 	''''code = []
 	bit = "1"
@@ -232,10 +233,44 @@ def runlength(string):
 		else:			
 			i += 1
 			continue
-	res += str(i)+string[-1]
+	if i == 1:
+		if string[k] == "0":
+			res += "A"
+		else:
+			res += "B"
+	else:
+		if string[k] == "0":
+			res += str(i)+"A"
+		else:
+			res += str(i)+"B"
+		
+		
 	return res
 		
+
+def binary(string):
+	res = ""
+	store = ""
+	i = 1
+	
+	for s in string:
+		store += s
 		
+		if i == 65:
+			res += str(int(store, 2))
+
+			store = ""
+			i = 1
+		
+		i += 1
+	
+	res += str(int(store,2))
+	
+	print res
+	
+	return res
+	
+	
 with open(str(sys.argv[1])) as f:
 	line = f.readline()
 	
@@ -263,10 +298,31 @@ with open(str(sys.argv[1])) as f:
 	#print decode(dec, bwt[1])
 	
 	hcode = huffman(bwt)
-	#print hcode
+	print hcode[0]
 	
+	
+	s = int(hcode[0],2 )
+	print s
+	
+	get_bin = lambda x: format(x, "b")
+	
+	print (get_bin(s))
+	
+			
+	
+	
+	#print int(hcode, 2)
 	#print runlength(hcode)
 	
 	with open("encoding.txt",  "w") as out:
-		out.write(runlength(hcode))
+		for item in hcode[1].items():
+			if item[1] != 1.0:
+				out.write(item[0]+" "+str(item[1][0])+" "+item[1][1]+" "+item[1][2]+"\n")
+			else:
+				out.write(item[0]+" "+str(item[1]))
+	
+		
+		out.write(str(int(hcode[0], 2)))
+	
+	#binary(hcode)
 
