@@ -102,6 +102,7 @@ with open(str(sys.argv[1])) as f:
 		else:
 			tree[line[2]] = (tree[line[2]], (line[0], line[1]))
 	
+	
 	line = f.readline()
 	line = line.replace("\n", "")
 	C = ast.literal_eval(line)
@@ -112,6 +113,8 @@ with open(str(sys.argv[1])) as f:
 	sigma = ast.literal_eval(line)
 	#print sigma
 	
+	length = f.readline()
+	
 	line = f.readline()
 	line = line.replace("\n", "")
 	line = int(line)
@@ -119,8 +122,13 @@ with open(str(sys.argv[1])) as f:
 	get_bin = lambda x: format(x, "b")
 	s = get_bin(line)
 	
-	print s
-	decH = decodeHuffmann(tree, root, s)
+	print len(s)
+	
+	while len(s) < int(length):
+		s = "0"+s
+		print s			
+	
+	decH = decodeHuffmann(tree, root, s)	
 	
 	print decH
 	

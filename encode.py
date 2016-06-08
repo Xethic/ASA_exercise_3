@@ -229,6 +229,7 @@ with open(str(sys.argv[1])) as f:
 	
 	hcode = huffman(code[0])
 	print hcode[0]
+	length = len(hcode[0])
 	
 	s = int(hcode[0],2 )
 	
@@ -250,6 +251,8 @@ with open(str(sys.argv[1])) as f:
 		out.write(str(C))
 		out.write("\n")
 		out.write(str(sigma))
+		out.write("\n")
+		out.write(str(length))
 		out.write("\n")
 		out.write(str(int(hcode[0], 2)))
 	
