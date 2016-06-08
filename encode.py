@@ -32,20 +32,8 @@ def encode(T):
 	
 	
 	return bwtstring
-	
-	
-
-def decode(bwt, LF):
-	s = "$"
-	i = 0
-
-	while len(s) < len(bwt):
-		s = bwt[i] + s
-		i = LF[i]
-	
-	return s
 		
-
+		
 def computeC(s):
 	C = dict()
 	res = []
@@ -62,6 +50,7 @@ def computeC(s):
 		res.append(s[1])		
 			
 	return res
+
 	
 def LF(bwt, C, sigma):
 	char_to_idx = dict((c, i) for i, c in enumerate(sigma))
@@ -79,7 +68,6 @@ def LF(bwt, C, sigma):
 		counts[char_idx] += 1
 	
 	return LF
-	
 	
 
 def mtf(string):
@@ -105,7 +93,6 @@ def mtf(string):
 	
 	return [code, l]
 	
-
 
 def imtf(convert):
 	code = convert[0]
