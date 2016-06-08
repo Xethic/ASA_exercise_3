@@ -38,7 +38,7 @@ def encode(T):
 def decode(bwt, LF):
 	s = "$"
 	i = 0
-	
+
 	while len(s) < len(bwt):
 		s = bwt[i] + s
 		i = LF[i]
