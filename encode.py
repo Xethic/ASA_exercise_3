@@ -1,7 +1,17 @@
 import sys
 
 
-def encode(T):
+def computeSigma(text):
+	sigma = []
+	
+	for s in sorted(text):
+		if s not in sigma:
+			sigma.append(s)
+	
+	return sigma
+
+
+def encodeBWT(T):
 	
 	s = ""
 	
@@ -14,13 +24,9 @@ def encode(T):
 		s = T[i:]			
 		s += T[:i]
 		
-		transform.append(s)
-		
-	#print transform	
+		transform.append(s)	
 	
 	sort = sorted(transform)
-	
-	#print sort 
 	
 	bwtstring = ""
 	index = 0
@@ -50,24 +56,6 @@ def computeC(s):
 		res.append(s[1])		
 			
 	return res
-
-	
-def LF(bwt, C, sigma):
-	char_to_idx = dict((c, i) for i, c in enumerate(sigma))
-	
-	print char_to_idx
-	counts = C
-	 
-	LF = []
-	
-	for i, c in enumerate(bwt):
-		char_idx = char_to_idx[c]
-		
-		LF.append(counts[char_idx])
-
-		counts[char_idx] += 1
-	
-	return LF
 	
 
 def mtf(string):
@@ -92,24 +80,6 @@ def mtf(string):
 	l.sort()
 	
 	return [code, l]
-	
-
-def imtf(convert):
-	code = convert[0]
-	l = list(convert[1])
-	
-	string = ""
-	r = 0
-	
-	for i in code:
-		r = int(i)
-		string += str(l[r])
-		
-		k = l[int(i)]
-		l.pop(int(i))
-		l.insert(0,k)
-	
-	return string
 	
 	
 def huffman(string):
@@ -165,9 +135,6 @@ def huffman(string):
 		
 		tree[l[0]] = (l[1], "0", njoin[0])
 		tree[r[0]] = (r[1], "1", njoin[0])
-		
-		#print l
-		#print r
 	
 	tree[njoin[0]] = (njoin[1])
 	print tree
@@ -184,20 +151,8 @@ def huffman(string):
 	
 	return (code, tree)
 	
-	''''code = []
-	bit = "1"
-	start = True
 	
-	for f in sfreq[::-1]:
-		if start:	
-			code.append(f[0], bit
-			start = False
-		
-		else:
-			bit = "0"+bit
-	print sfreq'''
-	
-
+'''
 def runlength(string):
 	
 	res = ""
@@ -231,9 +186,8 @@ def runlength(string):
 		else:
 			res += str(i)+"B"
 		
-		
 	return res
-		
+'''
 
 def binary(string):
 	res = ""
@@ -253,8 +207,6 @@ def binary(string):
 	
 	res += str(int(store,2))
 	
-	print res
-	
 	return res
 	
 	
@@ -265,50 +217,38 @@ with open(str(sys.argv[1])) as f:
 	
 	line += "$"
 	
+	sigma = computeSigma(line)
+	
 	#returns bwt string and index with original string
-	bwt = encode(line)
-	
-	sigma = []
-	
-	for s in sorted(line):
-		if s not in sigma:
-			sigma.append(s)
+	bwt = encodeBWT(line)
 	
 	C = computeC(line)
-
-	LF = LF(bwt, C, sigma)
 	
+	#print LF
 	code = mtf(bwt)	
-	dec = imtf(code)	
-	
-	#print decode(bwt, LF)
-	#print decode(dec, bwt[1])
 	
 	hcode = huffman(bwt)
-	print hcode[0]
-	
+	#print hcode[0]
 	
 	s = int(hcode[0],2 )
-	print s
+	#print s
 	
 	get_bin = lambda x: format(x, "b")
 	
-	print (get_bin(s))
-	
-			
-	
+	#print (get_bin(s))
 	
 	#print int(hcode, 2)
 	#print runlength(hcode)
 	
 	with open("encoding.txt",  "w") as out:
+		
 		for item in hcode[1].items():
 			if item[1] != 1.0:
 				out.write(item[0]+" "+str(item[1][0])+" "+item[1][1]+" "+item[1][2]+"\n")
 			else:
-				out.write(item[0]+" "+str(item[1]))
+				out.write(item[0]+" "+str(item[1])+"\n")
 	
-		
+		out.write(str(C))
 		out.write(str(int(hcode[0], 2)))
 	
 	#binary(hcode)
