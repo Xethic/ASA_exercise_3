@@ -227,28 +227,30 @@ with open(str(sys.argv[1])) as f:
 	#print LF
 	code = mtf(bwt)	
 	
-	hcode = huffman(bwt)
-	#print hcode[0]
+	hcode = huffman(code[0])
+	print hcode[0]
 	
 	s = int(hcode[0],2 )
+	
 	#print s
-	
-	get_bin = lambda x: format(x, "b")
-	
-	#print (get_bin(s))
 	
 	#print int(hcode, 2)
 	#print runlength(hcode)
 	
 	with open("encoding.txt",  "w") as out:
-		
+		out.write(str(len(hcode[1].items()))+"\n")
+		treeoutput = ''
 		for item in hcode[1].items():
 			if item[1] != 1.0:
-				out.write(item[0]+" "+str(item[1][0])+" "+item[1][1]+" "+item[1][2]+"\n")
+				treeoutput += item[0]+" "+item[1][1]+" "+item[1][2]+"\n"
 			else:
-				out.write(item[0]+" "+str(item[1])+"\n")
-	
+				treeoutput = item[0]+" "+str(item[1])+"\n" + treeoutput
+		
+		out.write(treeoutput)
 		out.write(str(C))
+		out.write("\n")
+		out.write(str(sigma))
+		out.write("\n")
 		out.write(str(int(hcode[0], 2)))
 	
 	#binary(hcode)
