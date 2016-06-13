@@ -55,28 +55,35 @@ def decodeHuffmann(tree, root, seq):
 	print 'HUFFMANN'
 	print str(tree)
 	pointer = root
+	nextnode = root
 	for i in range(len(seq)):
-					
-		nextnodes = tree[pointer]
 		
-		if(len(nextnodes[0][0]) == 1 and nextnodes[0][1] == seq[i]):
+		if pointer in tree:			
+			nextnodes = tree[pointer]
+			
+			if(len(nextnodes[0][0]) == 1 and nextnodes[0][1] == seq[i]):
+				encodedstring += nextnodes[0][0]
+				pointer = root
+				
+			elif(len(nextnodes[1][0]) == 1 and nextnodes[1][1] == seq[i]):
+				encodedstring += nextnodes[1][0]
+				pointer = root
+				
+			elif(nextnodes[0][1] == seq[i]):
+				pointer = nextnodes[0][0]
+				#print nextnodes[0][0]
+				#print nextnodes[0][1]
+				#print seq[i]
+				
+			else:
+				pointer = nextnodes[1][0]
+				#print nextnodes[1][0]
+				#print nextnodes[1][1]
+		else:
 			encodedstring += nextnodes[0][0]
 			pointer = root
 			
-		elif(len(nextnodes[1][0]) == 1 and nextnodes[1][1] == seq[i]):
-			encodedstring += nextnodes[1][0]
-			pointer = root
 			
-		elif(nextnodes[0][1] == seq[i]):
-			pointer = nextnodes[0][0]
-			#print nextnodes[0][0]
-			#print nextnodes[0][1]
-			#print seq[i]
-			
-		else:
-			pointer = nextnodes[1][0]
-			#print nextnodes[1][0]
-			#print nextnodes[1][1]
 	
 	return encodedstring
 
