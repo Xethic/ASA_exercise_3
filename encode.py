@@ -1,6 +1,6 @@
 import sys
 
-
+#computes sigma of given string with all characters
 def computeSigma(text):
 	sigma = []
 	
@@ -11,6 +11,7 @@ def computeSigma(text):
 	return sigma
 
 
+#BWT encoding, returns BWT
 def encodeBWT(T):
 	
 	s = ""
@@ -39,7 +40,8 @@ def encodeBWT(T):
 	
 	return bwtstring
 		
-		
+
+#computes C table, for each character the number of lexicographically smaller characters
 def computeC(s):
 	C = dict()
 	res = []
@@ -58,6 +60,7 @@ def computeC(s):
 	return res
 	
 
+#move to front encoding, returns encoded string and used alphabet
 def mtf(string):
 	l= list()
 	
@@ -82,6 +85,11 @@ def mtf(string):
 	return [code, l]
 	
 	
+#huffman encoding
+#tree is structured as following:
+#dictionary with k as the lable of the node, respective characters
+#value is its parent, 0 or 1 as the description of the path and the probability of the node 
+#returns encoded string and the used tree
 def huffman(string):
 	freq = dict()
 	
@@ -94,14 +102,7 @@ def huffman(string):
 		
 	liste = freq.items()
 	
-	#liste = sorted(liste)
-	
 	sfreq = sorted(liste, key = lambda tup: tup[1])
-	
-	#first and second in list, 0 left 1 right, new node with "first+second" as name, first+second freq as value
-	#tree contains node as key, tupel of freq, 0 or 1, parent as value
-	
-	#print sfreq
 	
 	tree = dict()
 	newnode = []
@@ -137,7 +138,6 @@ def huffman(string):
 		tree[r[0]] = (r[1], "1", njoin[0])
 	
 	tree[njoin[0]] = (njoin[1])
-	print tree
 	
 	code = ""	
 	for s in string:
@@ -151,44 +151,7 @@ def huffman(string):
 	
 	return (code, tree)
 	
-	
 '''
-def runlength(string):
-	
-	res = ""
-	curr = string[0]
-	i = 1
-	for k in range(1, len(string)):
-		if curr != string[k]:
-			if i == 1:
-				if string[k-1] == "0":
-					res += "A"
-				else:
-					res += "B"
-			else:
-				if string[k-1] == "0":
-					res += str(i)+"A"
-				else:
-					res += str(i)+"B"
-			i = 1
-			curr = string[k]
-		else:			
-			i += 1
-			continue
-	if i == 1:
-		if string[k] == "0":
-			res += "A"
-		else:
-			res += "B"
-	else:
-		if string[k] == "0":
-			res += str(i)+"A"
-		else:
-			res += str(i)+"B"
-		
-	return res
-'''
-
 def binary(string):
 	res = ""
 	store = ""
@@ -208,8 +171,10 @@ def binary(string):
 	res += str(int(store,2))
 	
 	return res
+'''
 	
-	
+#main
+#command line should have one argument with the given string that should be compressed	
 with open(str(sys.argv[1])) as f:
 	line = f.readline()
 	
@@ -217,28 +182,30 @@ with open(str(sys.argv[1])) as f:
 	
 	line += "$"
 	
+	#computation of alphabet
 	sigma = computeSigma(line)
 	
-	#returns bwt string and index with original string
+	#BWT
 	bwt = encodeBWT(line)
 	
+	#C table
 	C = computeC(line)
 	
-	#print LF
+	#move to front
 	code = mtf(bwt)	
 	
+	#huffman encoding
 	hcode = huffman(code[0])
-	print hcode[0]
+	
+	#length of huffman string
 	length = len(hcode[0])
 	
+	#converts bit string into an integer
 	s = int(hcode[0],2 )
 	
-	#print s
-	
-	#print int(hcode, 2)
-	#print runlength(hcode)
-	
+	#write needed information to the file
 	with open("encoding.txt",  "w") as out:
+		#stores the huffman tree
 		out.write(str(len(hcode[1].items()))+"\n")
 		treeoutput = ''
 		for item in hcode[1].items():
@@ -248,13 +215,15 @@ with open(str(sys.argv[1])) as f:
 				treeoutput = item[0]+" "+str(item[1])+"\n" + treeoutput
 		
 		out.write(treeoutput)
+		
+		#stores C table, sigma, bitstring length and converted integer as final encoding
 		out.write(str(C))
 		out.write("\n")
 		out.write(str(sigma))
 		out.write("\n")
 		out.write(str(length))
 		out.write("\n")
-		out.write(str(int(hcode[0], 2)))
+		out.write(str(s))
 	
-	#binary(hcode)
+	
 

@@ -1,7 +1,7 @@
 import ast
 import sys
 
-
+#compute LF table
 def LF(bwt, C, sigma):
 	char_to_idx = dict((c, i) for i, c in enumerate(sigma))
 	
@@ -21,6 +21,7 @@ def LF(bwt, C, sigma):
 	return LF
 
 
+#decoding of BWT string with LF mapping
 def decodeBWT(bwt, LF):
 	s = "$"
 	i = 0
@@ -32,9 +33,10 @@ def decodeBWT(bwt, LF):
 	return s
 
 
-def imtf(convert):
-	code = convert[0]
-	l = list(convert[1])
+#inverted move to front algorithm
+def imtf(s):
+	code = s[0]
+	l = list(s[1])
 	
 	string = ""
 	r = 0
@@ -50,6 +52,7 @@ def imtf(convert):
 	return string
 	
 
+#Huffman decoding with the given Huffman tree, its root and the given sequence to decode
 def decodeHuffmann(tree, root, seq):
 	encodedstring = ''
 	print 'HUFFMANN'
@@ -88,6 +91,8 @@ def decodeHuffmann(tree, root, seq):
 	return encodedstring
 
 
+#main
+#command line should have one argument with the compressed file
 with open(str(sys.argv[1])) as f:
 	line = f.readline()
 	line = line.replace("\n", "")
@@ -100,6 +105,7 @@ with open(str(sys.argv[1])) as f:
 	line = line.split()
 	root = line[0]
 	
+	#read tree, stored in a dictionary	
 	for i in range(treelength-1):
 		line = f.readline()
 		line = line.replace("\n", "")
@@ -110,44 +116,47 @@ with open(str(sys.argv[1])) as f:
 			tree[line[2]] = (tree[line[2]], (line[0], line[1]))
 	
 	
+	#read C table
 	line = f.readline()
 	line = line.replace("\n", "")
 	C = ast.literal_eval(line)
-	#print C
 	
+	
+	#read sigma of given sequence
 	line = f.readline()
 	line = line.replace("\n", "")
 	sigma = ast.literal_eval(line)
-	#print sigma
 	
+	#length of original bit sequence 
 	length = f.readline()
 	
+	#last readline reads the final code
 	line = f.readline()
 	line = line.replace("\n", "")
 	line = int(line)
 	
+	#convert code number into binary string
 	get_bin = lambda x: format(x, "b")
 	s = get_bin(line)
-	
-	print len(s)
-	
+
+	#add 0 to the front if binary string is not as long as original bit string
 	while len(s) < int(length):
 		s = "0"+s
 		print s			
 	
+	#Huffman decoding
 	decH = decodeHuffmann(tree, root, s)	
 	
-	print decH
-	
+	#move to front decoding
 	decimtf = [decH, sigma]
-	
 	bwt = imtf(decimtf)
 	
-	print bwt
-	
+	#LF mapping
 	LF = LF(bwt, C, sigma)
 	
+	#BWT decoding
 	decodedstring = decodeBWT(bwt, LF)
 	
+	#write decoded string to file
 	with open("decoding.txt",  "w") as out:
 		out.write(decodedstring[:-1])
